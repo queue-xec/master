@@ -1,14 +1,19 @@
 {
-  "name": "distributed_processing_queue_master",
+  "name": "master",
   "version": "1.0.0",
-  "description": "Main queue",
-   "main": "index.ts",
+  "description": "Master queue, push jobs and gathers results from online workers.",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "KosM",
   "license": "ISC",
   "dependencies": {
+    "commander": "^8.2.0",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "envfile": "^6.17.0",
+    "prompts": "^2.4.1",
     "zeromq": "^6.0.0-beta.6"
   }
 }

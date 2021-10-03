@@ -2,7 +2,7 @@ const {Socket} = require("zeromq")
  
 class Queue {
 
-  constructor(socket, max = 100) {
+  constructor(socket, max = 50000) {
     this.queue = []
     this.socket = socket 
     this.max = max

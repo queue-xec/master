@@ -130,10 +130,10 @@ class Master {
 }
 
 
-process.on('uncaughtException', (err) => {
-   console.error(err.message)
-})
-module.export=  Master
+process.on('uncaughtException', function (error) {
+    console.log(error.message);
+}); 
+
 
 
 ( async function () {
@@ -151,3 +151,5 @@ module.export=  Master
       break;
 }
 }());
+
+module.export=  Master

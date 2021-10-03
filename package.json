@@ -1,0 +1,14 @@
+{
+  "name": "distributed_processing_queue_master",
+  "version": "1.0.0",
+  "description": "Main queue",
+   "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "KosM",
+  "license": "ISC",
+  "dependencies": {
+    "zeromq": "^6.0.0-beta.6"
+  }
+}

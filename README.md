@@ -13,12 +13,12 @@ Needs a static ip or a FQDN , to shared with workers and a token.
   git clone https://github.com/queue-xec/master
   cd master
   npm install 
-  node index.js --setup
+  node cli.js --setup
 ```
 
 
 ```bash 
- node index.js --setup
+ node cli.js --setup
  ```
 Will prompt user to enter following info:
 - `port` listening  
@@ -91,7 +91,7 @@ async function run(){
 }
 ```
 
-
+### ⚠️ Under development ⚠️
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 

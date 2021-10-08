@@ -82,7 +82,7 @@ async function run() {
         dependencies: [],
       },
     };
-    mm.pushNewJob(payload);
+    mm.pushNewJob(JSON.stringify(require('./payload.json')));
   }, 2000);
 }
 

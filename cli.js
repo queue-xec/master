@@ -64,13 +64,18 @@ async function setup() {
 
   console.log('Settings stored in .env');
 }
+function resultCollect(result){
+  console.dir(result)
+}
 async function run() {
   const Master = require('./index');
 
-  const mm = new Master();
+  const mm = new Master({onResult: resultCollect});
   const dummy = {
 
   };
+
+
 
   setInterval(async () => {
     console.dir(mm.getQueueLength());
@@ -83,7 +88,9 @@ async function run() {
       },
     };
     mm.pushNewJob(JSON.stringify(require('./payload.json')));
-  }, 2000);
+    // mm.pushNewJob();
+
+  }, 100);
 }
 
 (async function () {

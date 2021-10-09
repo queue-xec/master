@@ -79,10 +79,11 @@ async function run() {
 
   setInterval(async () => {
     console.dir(mm.getQueueLength());
+    const file = getBase64('./task.js');
     const payload = {
       data: JSON.stringify(dummy),
       exec: {
-        file: getBase64('./task.js'),
+        file,
         name: 'exec.js',
         dependencies: [],
       },
@@ -90,7 +91,7 @@ async function run() {
     mm.pushNewJob(JSON.stringify(require('./payload.json')));
     // mm.pushNewJob();
 
-  }, 100);
+  }, 500);
 }
 
 (async function () {

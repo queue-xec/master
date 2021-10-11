@@ -10,13 +10,14 @@ const manager = new PluginManager();
 
   class Task {
   
-  constructor(job){
+  constructor(){
+    this.data =  null;
+    this.dependencies = job.exec.dependencies;    
+  }
+   async run(job){ 
+    const  { Big } = manager.require('big.js');
     this.data = job.data;
     this.dependencies = job.exec.dependencies;
-    
-  }
-   async run(){ 
-    const  { Big } = manager.require('big.js');
     // require your dependencies here or in any other class method is need...
 
     // code to run in workers

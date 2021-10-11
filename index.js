@@ -1,6 +1,7 @@
-const { Dealer, Pull } = require('zeromq');
+const {  Push, Pull } = require('zeromq');
 const Queue = require('./queue');
 const Hash = require('./hash');
+const fs = require('fs')
 
 require('dotenv').config();
 
@@ -20,6 +21,9 @@ class Master {
 
   async init() {
     const sender = new Dealer();
+    const sender = new Push();
+    sender.sendHighWaterMark = 1000;
+    sender.sendTimeout = 0;
     const resultReceiver= new Pull();
     console.log(this)
     await sender.bind(`tcp://${this.ip}:${this.port}`);
@@ -55,6 +59,9 @@ class Master {
 
   getQueueLength() {
     return this.queue.getLength();
+  }
+  static  getBase64(file) {
+    return fs.readFileSync(file, { encoding: 'base64' });
   }
 }
 

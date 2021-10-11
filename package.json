@@ -1,6 +1,6 @@
 {
   "name": "queue-xec-master",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Master queue, push jobs and gathers results from online workers.",
   "main": "index.js",
   "scripts": {

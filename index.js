@@ -20,7 +20,6 @@ class Master {
   }
 
   async init() {
-    const sender = new Dealer();
     const sender = new Push();
     sender.sendHighWaterMark = 1000;
     sender.sendTimeout = 0;

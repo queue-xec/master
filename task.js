@@ -12,7 +12,7 @@ const manager = new PluginManager();
   
   constructor(){
     this.data =  null;
-    this.dependencies = job.exec.dependencies;    
+    this.dependencies = null;
   }
    async run(job){ 
     const  { Big } = manager.require('big.js');

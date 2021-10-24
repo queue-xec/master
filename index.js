@@ -22,7 +22,7 @@ class Master {
   async init() {
     const sender = new Push();
     sender.sendHighWaterMark = 1000;
-    sender.sendTimeout = 0;
+    sender.sendTimeout = -1;
     const resultReceiver= new Pull();
     console.log(this)
     await sender.bind(`tcp://${this.ip}:${this.port}`);

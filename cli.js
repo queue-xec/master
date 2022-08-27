@@ -2,7 +2,9 @@ const prompts = require('prompts');
 const { program } = require('commander');
 const fs = require('fs');
 const envfile = require('envfile');
+const path = require('path');
 const { version } = require('./package.json');
+const Master = require('./src/index');
 
 const sourcePath = '.env';
 
@@ -64,34 +66,39 @@ async function setup() {
 
   console.log('Settings stored in .env');
 }
-function resultCollect(result){
-  console.dir(result)
+function resultCollect(result) {
+  // console.dir(result);
 }
 async function run() {
-  const Master = require('./index');
-
-  const mm = new Master({onResult: resultCollect});
+  const mm = new Master({
+    onResults: resultCollect,
+    execAssets: {
+      dependencies: [],
+      files: [
+        { masterPath: '/src/Logger.js', name: 'Logger.js', workerPath: '/workplace/helpers/Logger.js' },
+      ],
+    },
+  });
   const dummy = {
 
   };
 
-
-
-  setInterval(async () => {
-    console.dir(mm.getQueueLength());
-    const file = getBase64('./task.js');
+  let cnt = 0;
+  for (let i = 0; i < 5; i++) {
     const payload = {
+      id: cnt,
       data: JSON.stringify(dummy),
-      exec: {
-        file,
-        name: 'exec.js',
-        dependencies: [],
-      },
-    };
-    mm.pushNewJob(JSON.stringify(require('./payload.json')));
-    // mm.pushNewJob();
 
-  }, 500);
+    };
+    await mm.pushNewJob(payload).catch((e) => console.log(e));
+    // mm.pushNewJob();
+    cnt += 1;
+  }
+  // setInterval(async () => {
+  //   // console.dir(mm.getQueueLength());
+  //   // const file = getBase64(path.join(process.cwd(), '/task.js'));
+
+  // }, 100);
 }
 
 (async function () {
@@ -101,12 +108,12 @@ async function run() {
   program.parse(process.argv);
   const options = program.opts();
   switch (true) {
-  case (options.setup):
-    await setup();
-    break;
-  default:
-    await run();
-    break;
+    case (options.setup):
+      await setup();
+      break;
+    default:
+      await run();
+      break;
   }
 }());
 

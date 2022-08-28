@@ -6,6 +6,7 @@ const path = require('path');
 const { version } = require('./package.json');
 const Master = require('./src/index');
 
+const { FgYellow, Reset } = require('./src/Logger');
 const sourcePath = '.env';
 
 program.version(version);
@@ -23,28 +24,37 @@ function makeid(length) {
   return result;
 }
 async function setup() {
+  console.log('Transfer Encrypt Token is used to encrypt data communications with workers.');
+  console.log('Master and Workers have to pick the same Transfer Encrypt Token ..');
+  console.log('Dont share it with dont trusty parties.');
   const questions = [
     {
-      type: 'number',
-      name: 'port',
-      message: 'Enter listening port:',
-      validate: (port) => (port < 80 ? 'Enter a valid port above 80' : true),
-    },
-    {
-      type: 'number',
-      name: 'queueLimit',
-      message: 'Max queue limit:',
-      initial: 5000,
+      type: 'confirm',
+      name: 'choice',
+      message: 'Generate new random  Transfer Encrypt Token ?',
+      initial: true,
     },
   ];
-  const portQ = await prompts(questions);
-  fs.writeFileSync(sourcePath, envfile.stringify(portQ));
+  const genTransferEncryptToken = await prompts(questions);
+  if (genTransferEncryptToken.choice) {
+    const transferEncryptToken = { transferEncryptToken: makeid(32) };
+    console.log(`Share this token with your workers ${FgYellow}transferEncryptToken${Reset}: ${transferEncryptToken.transferEncryptToken}`);
+    fs.appendFileSync(sourcePath, envfile.stringify(transferEncryptToken));
+  } else {
+    const transferEncryptTokenFromUser = await prompts({
+      type: 'text',
+      name: 'transferEncryptToken',
+      message: 'ENTER Transfer Encrypt Token [32 length string]',
+      validate: (transferEncryptToken) => (transferEncryptToken.length < 32 ? 'Minimum length is 32' : true),
+    });
+    fs.appendFileSync(sourcePath, envfile.stringify(transferEncryptTokenFromUser));
+  }
 
   const genKeys = await prompts(
     {
       type: 'confirm',
       name: 'gen_keys',
-      message: 'Create new random hash?',
+      message: 'Create new random token [Will used to find your workers and them you]?',
       initial: true,
     },
   );
@@ -52,20 +62,19 @@ async function setup() {
     const hashFromUser = await prompts({
       type: 'text',
       name: 'token',
-      message: 'Servers token [32 length string]',
-      validate: (token) => (token.length < 32 ? 'Minimum length is 32' : true),
+      message: 'Enter your token [atleast 20 length string]',
+      validate: (token) => (token.length < 20 ? 'Minimum length is 20' : true),
     });
-    // fs.writeFileSync('./.env', envfile.stringify(portQ))
     fs.appendFileSync(sourcePath, envfile.stringify(hashFromUser));
     return;
   }
-  // console.log(genKeys)
-  const key = { token: makeid(32) };
-  console.log(`Share this token with your workers: ${key.token}`);
+  const key = { token: makeid(20) };
+  console.log(`Share this token with your workers ${FgYellow}token${Reset}: ${key.token}`);
   fs.appendFileSync(sourcePath, envfile.stringify(key));
 
   console.log('Settings stored in .env');
 }
+
 function resultCollect(result) {
   console.dir(result);
 }

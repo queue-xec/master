@@ -67,15 +67,17 @@ async function setup() {
   console.log('Settings stored in .env');
 }
 function resultCollect(result) {
-  // console.dir(result);
+  console.dir(result);
 }
 async function run() {
   const mm = new Master({
     onResults: resultCollect,
     execAssets: {
-      dependencies: [],
+      dependencies: [], // pass Worker dependencies like : ['big.js', 'moment']
       files: [
-        { masterPath: '/src/Logger.js', name: 'Logger.js', workerPath: '/workplace/helpers/Logger.js' },
+        // { masterPath: '/src/Logger.js', name: 'Logger.js', workerPath: '/workplace/Logger.js' },
+        // { masterPath: '/src/Helper.js', name: 'Helper.js', workerPath: '/workplace/Helper.js' },
+        // { masterPath: '/src/task.js', name: 'task.js', workerPath: '/workplace/task.js' }, // TODO this should be overridable by user
       ],
     },
   });

@@ -35,16 +35,16 @@ class Master {
     this.peer = Bugout(this.token);
     this.onResults = onResults;
     this.execAssets = execAssets;
-    this.execAssets.files = [...this.execAssets.files, ...defaultExecAssets];
+    this.execAssets.files = [...this.execAssets.files, ...defaultExecAssets]; 
+    // TODO populate in init , after check if user has defined already an asset with name task.js
+    // to be able to ovveride default task.js file and its location.
 
     this.onSeen = this.onSeen.bind(this);
     this.init = this.init.bind(this);
     this.requestExecAssets = this.requestExecAssets.bind(this);
     this.encryptFiles = this.encryptFiles.bind(this);
-    // this.requestExecAssets = this.requestExecAssets.bind(this);
-    // this.populateSha256OnAssets = this.populateSha256OnAssets.bind(this);
 
-    this.peer.on('rpc', this.onRpcCall);
+    // this.peer.on('rpc', this.onRpcCall);
     this.peer.on('seen', this.onSeen);
     this.peer.on('message', this.onMessage);
     // this.peer.on('rpc-response', (address, nonce, response)=> );
@@ -55,7 +55,6 @@ class Master {
   }
 
   async init(transferEncryptToken) {
-    // this.event.addListener('worker_joined',  );
     this.log.info('Address:', this.peer.address());
     this.log.info('Seed:', this.peer.seed);
     this.log.info('Announcing to trackers...');
@@ -104,13 +103,13 @@ class Master {
       cb(args);
     });
     this.peer.register('shareResults', (pk, args, cb) => {
-      this.onResults(args);
+      const results = JSON.parse(this.crypt.decrypt(JSON.parse(args)));
+      this.onResults(results);
     });
     this.peer.register('requestExecAssets', (pk, args, cb) => {
-      const currentHash = args?.currentHash; // hash of currnet assets array
+      const currentHash = args?.currentHash; // hash of current assets array
       // if is same , not send again
       this.requestExecAssets(currentHash).then((ans) => {
-        // this.log.debug(ans);
         cb(ans);
       });
     });
@@ -121,10 +120,9 @@ class Master {
     this.log.debug(`message from ${address} :`, message);
   }
 
-  /** Called when a peer */
-  onRpcCall(hash, call) {
-    // console.log(`RPC: ${call}`);
-  }
+  /** Called when a peer calls rpc on this node */
+  // onRpcCall(hash, call) {
+  // }
 
   onSeen(newPeerAddress) {
     this.log.info('New peer seen : ', newPeerAddress);
@@ -142,49 +140,23 @@ class Master {
         this.log.fatal('pushNewJob:', 'payload is undefined');
         reject(Error('payload is undefined'));
       }
+      let payloadJson = payload;
+      if (typeof payloadJson === 'object') payloadJson = JSON.stringify(payload);
+
+      const encryptedPayload = this.crypt.encrypt(payloadJson);
       this.log.debug('pushNewJob payload: ', payload);
       if (this.jobs.length > 20) {
         // resolve();
         setTimeout(() => {
-          this.jobs.push(payload);
+          this.jobs.push(JSON.stringify(encryptedPayload));
           resolve();
         }, this.jobs.length * 3);
       } else {
-        this.jobs.push(payload);
+        this.jobs.push(JSON.stringify(encryptedPayload));
         resolve();
       }
     });
   }
-
-  /**
-   * Description:
-   * @param {Array} arr
-   */
-  // async populateSha256OnAssets(arr) {
-  //   return new Promise((resolve, reject) => {
-  //     const fileAssets = arr;
-  //     const promises = [];
-  //     for (let i = 0; i < fileAssets.length; i++) {
-  //       const file = fileAssets[i];
-  //       const prom = Helper.getSha256(`${process.cwd()}${file.masterPath}`).then((value) => {
-  //         if (value) { file.sha256 = value; }
-  //       }).catch((e) => {
-  //         this.log.warn('populateSha256OnAssets :', e.message);
-  //         this.log.warn('populateSha256OnAssets prom :', prom);
-
-  //         if (e.message.includes('not found')) {
-  //           fileAssets.remove(fileAssets[i]);
-  //           delete fileAssets[i];
-  //         }
-  //       });
-
-  //       promises.push(prom);
-  //     }
-  //     Promise.allSettled(promises).then((results) => {
-  //       resolve(fileAssets);
-  //     });
-  //   });
-  // }
 
   /**
    * Description: Call populateSha256OnAssets to geneate current hashs of all files ,
@@ -201,6 +173,7 @@ class Master {
       let unifiedHash = '';
       for (let i = 0; i < assets.length; i += 1) { //
         const file = assets[i];
+        // eslint-disable-next-line no-await-in-loop
         const sha = await Helper.getSha256(`${process.cwd()}${file.masterPath}`)
           .catch((e) => { // usually not found reject error here
             this.log.warn(file.masterPath, e.message);
@@ -234,7 +207,6 @@ class Master {
    * @param {Array} files
    */
   encryptFiles(execAssets) {
-    // this.log.fatal(files.length)
     const assetFiles = execAssets.files;
     for (let i = 0; i < assetFiles.length; i++) {
       const asset = assetFiles[i];

@@ -31,9 +31,7 @@ class Master {
     this.peer = Bugout(this.token);
     this.onResults = onResults;
     this.execAssets = execAssets;
-    this.execAssets.files = [...this.execAssets.files, ...defaultExecAssets]; 
-    // TODO populate in init , after check if user has defined already an asset with name task.js
-    // to be able to ovveride default task.js file and its location.
+    this.execAssets.files = [];
 
     this.onSeen = this.onSeen.bind(this);
     this.init = this.init.bind(this);
@@ -54,11 +52,18 @@ class Master {
     this.log.info('Address:', this.peer.address());
     this.log.info('Seed:', this.peer.seed);
     this.log.info('Announcing to trackers...');
+    if (Array.isArray(this.execAssets.files)) {
+      const existTaskFromUser = this.execAssets.files.filter((file) => file.name === 'task.js');
+      if (existTaskFromUser.length > 1) this.log.fatal('You can pass only one file with name task.js check execAssets.files!');
+      if (existTaskFromUser.length === 0) {
+        this.log.debug('populating execAssets with default values , not found task.js from user.');
+        this.execAssets.files = [...this.execAssets.files, ...defaultExecAssets];
+      }
+    }
     this.crypt = new Crypt(transferEncryptToken || process.env.transferEncryptToken);
     if (this.crypt.key instanceof Error) {
       this.log.fatal('Crypt: ', this.crypt);
     }
-    this.log.debug(typeof this.crypt.key);
     this.registerRPC();
   }
 

@@ -7,6 +7,7 @@ const { version } = require('./package.json');
 const Master = require('./src/index');
 
 const { FgYellow, Reset } = require('./src/Logger');
+
 const sourcePath = '.env';
 
 program.version(version);
@@ -86,7 +87,7 @@ async function run() {
       files: [
         // { masterPath: '/src/Logger.js', name: 'Logger.js', workerPath: '/workplace/Logger.js' },
         // { masterPath: '/src/Helper.js', name: 'Helper.js', workerPath: '/workplace/Helper.js' },
-        // { masterPath: '/src/task.js', name: 'task.js', workerPath: '/workplace/task.js' }, // TODO this should be overridable by user
+        // { masterPath: '/src/task.js', name: 'task.js', workerPath: '/workplace/task.js' },
       ],
     },
   });

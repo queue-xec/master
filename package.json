@@ -1,6 +1,6 @@
 {
   "name": "queue-xec-master",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "Master queue, push jobs and gathers results from online workers.",
   "main": "index.js",
   "scripts": {
@@ -9,11 +9,18 @@
   "author": "KosM",
   "license": "MIT",
   "dependencies": {
+    "bugout": "^0.0.13",
     "commander": "^8.2.0",
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "envfile": "^6.17.0",
-    "prompts": "^2.4.1",
-    "zeromq": "^6.0.0-beta.6"
+    "eslint": "^7.32.0 || ^8.2.0",
+    "events": "^3.3.0",
+    "moment": "^2.29.4",
+    "prompts": "^2.4.1"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.2"
   }
 }

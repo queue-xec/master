@@ -1,7 +1,3 @@
-// const {  Push, Pull } = require('zeromq');
-// const Queue = require('./queue');
-// const Hash = require('./hash');
-// const fs = require('fs')
 const Bugout = require('bugout');
 const events = require('events');
 const fs = require('fs');
@@ -203,7 +199,7 @@ class Master {
   }
 
   /**
-   * Description:
+   * Description: Reads assets defined , if exist try to encrypt data from files.
    * @param {Array} files
    */
   encryptFiles(execAssets) {

@@ -76,7 +76,7 @@ async function run(){
       files: [ 
          { masterPath: '/src/task.js', name: 'task.js', workerPath: '/workplace/task.js' }, // if task.js file not passed to workers , Master will use default one located in /src/task.js , here you can ovverride it by changing above details
          { masterPath: '/src/Logger.js', name: 'Logger.js', workerPath: '/workplace/Logger.js' },
-	       { masterPath: '/src/Helper.js', name: 'Helper.js', workerPath: '/workplace/Helper.js' },
+        { masterPath: '/src/Helper.js', name: 'Helper.js', workerPath: '/workplace/Helper.js' },
       ],
       /* masterPath and workerPath are not absolute , NEVER access files out of their process.cwd()  path.
 	     Are relative to their process current location , respectively */

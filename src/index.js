@@ -31,7 +31,6 @@ class Master {
     this.peer = Bugout(this.token);
     this.onResults = onResults;
     this.execAssets = execAssets;
-    this.execAssets.files = [];
 
     this.onSeen = this.onSeen.bind(this);
     this.init = this.init.bind(this);

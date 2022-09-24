@@ -1,18 +1,8 @@
-# Example Run
+# Run Example #1
+
 ```
-npm install
+git clone https://github.com/queue-xec/master && cd master
+yarn --prod # npm install --only=prod
+cd example
 node index.js
 ```
-
-Runs local master queue.
-with options : 
-```javascript
-    const options = {
-        ip: '127.0.0.1',
-        port: 8080,
-        token: 'secretsecretsecretsecretsecrettt',
-        onResult: collectResults
-    }
-```
-
-job file : task.js

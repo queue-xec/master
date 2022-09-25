@@ -163,7 +163,7 @@ class Master {
     async pushNewJob(payload) {
         return new Promise((resolve, reject) => {
             if (typeof payload === 'undefined') {
-                this.log.fatal('pushNewJob:', 'payload is undefined');
+                this.log.warn('pushNewJob:', 'payload is undefined');
                 reject(Error('payload is undefined'));
             }
             let payloadJson = payload;

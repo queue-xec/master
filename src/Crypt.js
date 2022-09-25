@@ -8,13 +8,16 @@ class Crypt {
     }
 
     encrypt(text) {
+        let textToEncrypt = text;
         try {
+            if (typeof textToEncrypt === 'number')
+                textToEncrypt = textToEncrypt.toString();
             const cipher = crypto.createCipheriv(
                 'aes-256-cbc',
                 Buffer.from(this.getKey()),
                 this.getIv()
             );
-            let encrypted = cipher.update(text);
+            let encrypted = cipher.update(textToEncrypt);
             encrypted = Buffer.concat([encrypted, cipher.final()]);
             return {
                 iv: this.getIv().toString('hex'),

@@ -4,7 +4,8 @@
     "description": "Master queue, push jobs and gathers results from online workers.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest --forceExit",
+        "test:dev": "jest --watch ",
         "lint": "eslint --ext .js,.ts .",
         "format": "prettier --write .",
         "prepare": "husky install"
@@ -23,11 +24,13 @@
         "prompts": "^2.4.1"
     },
     "devDependencies": {
+        "@types/jest": "^29.0.3",
         "cz-conventional-changelog": "^3.3.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.25.2",
         "husky": "^8.0.1",
+        "jest": "^29.0.3",
         "lint-staged": "^13.0.3",
         "prettier": "2.7.1"
     },
@@ -40,5 +43,10 @@
         "hooks": {
             "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
         }
+    },
+    "jest": {
+        "modulePathIgnorePatterns": [
+            "utils"
+        ]
     }
 }

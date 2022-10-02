@@ -103,13 +103,20 @@ class Master {
         this.peer.register('requestWork', (pk, args, cb) => {
             switch (true) {
                 case this.jobs.length > 1: {
+                    if (args.getBatch && this.jobs.length > args.batchSize) {
+                        args.batchTasks = this.jobs.splice(0, args.batchSize); // splice mutates original array which slices it
+                        this.log.debug(
+                            `task queue reduced:${this.jobs.length} - ${args.batchSize}`
+                        );
+                        break;
+                    }
                     args.task = this.jobs.shift();
                     this.log.debug(`task queue reduced:${this.jobs.length}`);
                     break;
                 }
                 case this.jobs.length === 1: {
-                    // shift  make array undefined on last element
-                    [args.task] = this.jobs; // , correct this with this check
+                    // shift  leaves array undefined on last element
+                    [args.task] = this.jobs; // this case is to avoid that
                     this.jobs = [];
                     this.log.debug(`task queue finished:${this.jobs.length}`);
                     break;

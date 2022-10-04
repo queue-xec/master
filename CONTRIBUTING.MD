@@ -1,4 +1,5 @@
 # Contributing
+ 🎉 Thank you for considering contributing to queue-xec! 🎉
 
 Contributors are always welcome! Any single line of code maters! Don't hesitate to correct even a typo!
 
@@ -25,7 +26,18 @@ git checkout -b my_new_feature
 ... make your changes
 git commit
 ```
+
+### After environment setup
+Start working on your test in develpment mode by :
+```js
+yarn run test:dev
+```
+Create unit test in parallel of actual feature.
+No pull request will be accepted if not contains new unit tests if introduce new features , or fixes of bugs!
+
+
 ### On git commit :
 After all test passed , commitizen will fire up and start asking questions about your commit.(Be honest)
 
 If you have any issue during this , check issues , if cant found something related , open a new issue , any other contributor can help you.
+

@@ -24,8 +24,10 @@ describe('pushNewJob method', () => {
 
         expect(encryptedPayload).toHaveProperty('iv');
         expect(encryptedPayload).toHaveProperty('encryptedData');
-        expect(master.jobs).toHaveLength(1);
-        expect(JSON.parse(master.jobs[0])).toEqual(encryptedPayload);
+        expect(master.jobs.size).toEqual(1);
+        expect(JSON.parse(master.jobs.dequeue().value)).toEqual(
+            encryptedPayload
+        );
     });
     it('Push job succesfully and enrcypted , if job is array', async () => {
         const encryptedPayload = master.crypt.encrypt(
@@ -35,8 +37,10 @@ describe('pushNewJob method', () => {
 
         expect(encryptedPayload).toHaveProperty('iv');
         expect(encryptedPayload).toHaveProperty('encryptedData');
-        expect(master.jobs).toHaveLength(1);
-        expect(JSON.parse(master.jobs[0])).toEqual(encryptedPayload);
+        expect(master.jobs.size).toEqual(1);
+        expect(JSON.parse(master.jobs.dequeue().value)).toEqual(
+            encryptedPayload
+        );
     });
     it('Push job succesfully and enrcypted , if job is string', async () => {
         const jobData = '50';
@@ -45,8 +49,10 @@ describe('pushNewJob method', () => {
 
         expect(encryptedPayload).toHaveProperty('iv');
         expect(encryptedPayload).toHaveProperty('encryptedData');
-        expect(master.jobs).toHaveLength(1);
-        expect(JSON.parse(master.jobs[0])).toEqual(encryptedPayload);
+        expect(master.jobs.size).toEqual(1);
+        expect(JSON.parse(master.jobs.dequeue().value)).toEqual(
+            encryptedPayload
+        );
     });
     it('Push job succesfully and enrcypted , if job is number', async () => {
         const jobData = 50;
@@ -55,7 +61,9 @@ describe('pushNewJob method', () => {
 
         expect(encryptedPayload).toHaveProperty('iv');
         expect(encryptedPayload).toHaveProperty('encryptedData');
-        expect(master.jobs).toHaveLength(1);
-        expect(JSON.parse(master.jobs[0])).toEqual(encryptedPayload);
+        expect(master.jobs.size).toEqual(1);
+        expect(JSON.parse(master.jobs.dequeue().value)).toEqual(
+            encryptedPayload
+        );
     });
 });

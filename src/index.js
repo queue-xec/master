@@ -5,6 +5,7 @@ const fs = require('fs');
 const { Logger } = require('./Logger');
 const { Helper } = require('./Helper');
 const Crypt = require('./Crypt');
+const Queue = require('./Queue');
 
 const defaultExecAssets = [
     {
@@ -26,7 +27,7 @@ class Master {
         transferEncryptToken = null,
     } = {}) {
         this.availableWorkers = [];
-        this.jobs = [];
+        this.jobs = new Queue();
 
         this.event = new events.EventEmitter();
         this.log = new Logger({ level: loglevel || process.env.LOG_LEVEL });
@@ -53,6 +54,7 @@ class Master {
         // this.peer.on('left', (address)=> );
 
         this.event.addListener('init', this.init);
+        this.event.addListener('resultsShared', this.onResults);
         this.event.emit('init', transferEncryptToken);
     }
 
@@ -102,33 +104,47 @@ class Master {
         });
         this.peer.register('requestWork', (pk, args, cb) => {
             switch (true) {
-                case this.jobs.length > 1: {
-                    if (args.getBatch && this.jobs.length > args.batchSize) {
-                        args.batchTasks = this.jobs.splice(0, args.batchSize); // splice mutates original array which slices it
+                case this.jobs.size > 1: {
+                    if (args.getBatch) {
+                        args.batchTasks = [];
+                        let totalJobsSend = args.batchSize;
+                        if (this.jobs.size <= args.batchSize) totalJobsSend = 1; // get only available
+                        for (let i = 0; i < totalJobsSend; i += 1) {
+                            const queuedJob = this.jobs.dequeue();
+                            if (!queuedJob) break;
+                            args.batchTasks.push(queuedJob.value);
+                        }
+                        // args.batchTasks = this.jobs.splice(0, args.batchSize); // splice mutates original array which slices it
                         this.log.debug(
-                            `task queue reduced:${this.jobs.length} - ${args.batchSize}`
+                            `task queue reduced:${this.jobs.size} - ${args.batchSize}`
                         );
                         break;
                     }
-                    args.task = this.jobs.shift();
-                    this.log.debug(`task queue reduced:${this.jobs.length}`);
-                    break;
-                }
-                case this.jobs.length === 1: {
-                    // shift  leaves array undefined on last element
-                    [args.task] = this.jobs; // this case is to avoid that
-                    this.jobs = [];
-                    this.log.debug(`task queue finished:${this.jobs.length}`);
-                    break;
-                }
-                case this.jobs.length === 0: {
+                    const queuedJob = this.jobs.dequeue();
                     args.task = null;
-                    this.log.debug(`task queue is empty:${this.jobs.length}`);
+                    if (queuedJob) {
+                        args.task = queuedJob.value;
+                        this.log.debug(`task queue reduced:${this.jobs.size}`);
+                    }
+                    break;
+                }
+                case this.jobs.size === 1: {
+                    const queuedJob = this.jobs.dequeue();
+                    args.task = null;
+                    if (queuedJob) {
+                        args.task = queuedJob.value;
+                        this.log.debug(`task queue reduced:${this.jobs.size}`);
+                    }
+                    break;
+                }
+                case this.jobs.size === 0: {
+                    args.task = null;
+                    this.log.debug(`task queue is empty:${this.jobs.size}`);
                     break;
                 }
                 default: {
                     args.task = null;
-                    this.log.warning(`task queue is empty:${this.jobs.length}`);
+                    this.log.warning(`task queue is empty:${this.jobs.size}`);
 
                     break;
                 }
@@ -137,7 +153,7 @@ class Master {
         });
         this.peer.register('shareResults', (pk, args) => {
             const results = JSON.parse(this.crypt.decrypt(JSON.parse(args)));
-            this.onResults(results);
+            this.event.emit('resultsShared', results);
         });
         this.peer.register('requestExecAssets', (pk, args, cb) => {
             const currentHash = args?.currentHash; // hash of current assets array
@@ -179,14 +195,13 @@ class Master {
 
             const encryptedPayload = this.crypt.encrypt(payloadJson);
             this.log.debug('pushNewJob payload: ', payload);
-            if (this.jobs.length > 20) {
-                // resolve();
-                setTimeout(() => {
-                    this.jobs.push(JSON.stringify(encryptedPayload));
+            if (this.jobs.size >= 1000) {
+                Helper.sleep(this.jobs.size * 0.3).then(() => {
+                    this.jobs.enqueue(JSON.stringify(encryptedPayload));
                     resolve();
-                }, this.jobs.length * 3);
+                });
             } else {
-                this.jobs.push(JSON.stringify(encryptedPayload));
+                this.jobs.enqueue(JSON.stringify(encryptedPayload));
                 resolve();
             }
         });

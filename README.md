@@ -7,6 +7,8 @@ Master connects to a peer2peer "room" data channel and shares with their peers (
 
 Master and Workers can find each other in any network condition , as long they are connected online. This is possible from nature of peer to peer networks and [bugout](https://github.com/chr15m/bugout) ! Bugout offers message transfer encryption, but we encrypt all data i/o transfers on top of that , here as well.
 
+<img  height="780px"  src="./example/demo.gif">
+
 ## Installation
 
 ```bash

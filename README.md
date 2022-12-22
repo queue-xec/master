@@ -3,7 +3,7 @@
 [![Publish to NPM](https://github.com/queue-xec/master/actions/workflows/publish_npm.yml/badge.svg)](https://github.com/queue-xec/master/actions/workflows/publish_npm.yml)
 
 
-Master connects to a peer2peer "room" data channel and shares with their peers (Workers) data about the jobs. Among them is job data( each job/task may have its own data to solve/work on) , job code to executed in workers and code dependencies which workers have to install before stat processing tasks. In other words Master defines the problem , defines the way to solve it, provides all the tools and code needed and adds data (if) needed to solve the problem..
+Master connects to a peer-to-peer 'room' data channel and shares with their peers (Workers) data about the jobs. Among them is job data( each job/task may have its own data to solve/work on) , job code to executed by workers and code dependencies which workers have to install before stat processing tasks. In other words Master defines the problem , defines the way to solve it, provides all the tools and code needed and adds data (if needed() to solve the problem..
 
 Master and Workers can find each other in any network condition , as long they are connected online. This is possible from nature of peer to peer networks and [bugout](https://github.com/chr15m/bugout) ! Bugout offers message transfer encryption, but we encrypt all data i/o transfers on top of that , here as well.
 
@@ -26,11 +26,13 @@ Will prompt user to enter following info:
 -   `transferEncryptToken` Enter a 32 length alphanumeric string Or prompt to generate one on the fly
 -   `token` Enter at least 20 length alphanumeric string Or prompt to generate one on the fly
 
-These info will saved and loaded in .env file at root Masters folder.Should be the same on all workers , to be able to communicate.
+These info will be saved and loaded in .env file in the root folder of Master.It should be the same on all workers , to be able to communicate.
 
 ## How to set job code to run in workers
 
-Edit [taskFile](https://github.com/queue-xec/master/blob/devel/src/task.js) inner `run()` method ⚠️ Beware , this file should never modified in a remote Worker instance because will be overwritten by Master next time Worker instance initiated.
+Edit [taskFile](https://github.com/queue-xec/master/blob/devel/src/task.js) inner `run()` method
+
+ ⚠️ Beware, this file should never be modified in a remote worker instance because it will be overwritten by Master the next time the worker instance is initiated
 
 ```javascript
 // Require here libs you passed from master as dependencies

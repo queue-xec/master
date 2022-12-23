@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable import/no-unresolved */
-const Master = require('../index');
+const Master = require('../../index');
 // const Master = require('queue-xec-master')
 
 // set here only for example , transferEncryptToken

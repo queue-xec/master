@@ -4,6 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "puppeteer": "^19.4.1"
+    "puppeteer": "^22.1.0"
   }
 }

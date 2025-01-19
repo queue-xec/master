@@ -68,7 +68,7 @@ class Queue {
      */
     search(item) {
         let current = this.first;
-        if (typeof item !== typeof current.value) {
+        if (current != null && typeof item !== typeof current.value) {
             return null;
         }
         while (current !== null) {

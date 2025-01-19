@@ -1,9 +1,11 @@
-/* eslint-disable no-console */
 const crypto = require('crypto');
 
 class Crypt {
     constructor(key) {
-        this.key = key || new Error('transferEncryptToken not specified..');
+        this.key = key;
+        if (!key) {
+            throw new Error('transferEncryptToken not specified..');
+        }
         this.iv = crypto.randomBytes(16);
     }
 

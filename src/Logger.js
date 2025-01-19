@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable class-methods-use-this */
 const FgYellow = '\x1b[33m';
 const FgRed = '\x1b[31m';
 const FgCyan = '\x1b[36m';
@@ -135,7 +133,6 @@ class Logger {
         if (!msg) {
             console.log(`[FATAL] > ${FgRed} `, 'Unknown msg passed to Logger');
             process.exit(-1);
-            return;
         }
         const message = msg;
         if (extra) {

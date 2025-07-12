@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 16.x
           cache: 'npm'
-      - run: npm
+      - run: npm ci
       - run: npm test
 
   publish:

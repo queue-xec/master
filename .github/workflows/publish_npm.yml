@@ -12,9 +12,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: 'yarn'
-      - run: yarn --frozen-lockfile
-      - run: yarn run test
+          cache: 'npm'
+      - run: npm
+      - run: npm test
 
   publish:
     needs: test
@@ -28,7 +28,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
           scope: '@t13'
-      - run: yarn --frozen-lockfile
+      - run: npm
       - name: Publish package on NPM 📦
         run: npm publish
         env:

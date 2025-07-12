@@ -1,22 +1,32 @@
 // helper.test.js
 const { Helper } = require('../src/Helper');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const fs = require('fs');
 const crypto = require('crypto');
 
 describe('Helper', () => {
     describe('LocalTime', () => {
+        beforeAll(() => {
+            // Set a default timezone for tests
+            moment.tz.setDefault('America/New_York');
+        });
+
+        afterAll(() => {
+            // Reset the default timezone
+            moment.tz.setDefault();
+        });
+
         it('returns expected local time for valid timestamp', () => {
-            const timestamp = 1737155257000; // Representing 2022-02-01 12:30:00
-            const expectedTime = '18-01 01:07:37';
+            const timestamp = 1737155257000; // Representing 2025-01-17 12:07:37 UTC
+            const expectedTime = '17-01 18:07:37'; // Expected time in America/New_York (UTC-5)
             expect(Helper.LocalTime(timestamp)).toBe(expectedTime);
         });
 
         it('returns expected local time for current timestamp', () => {
-            const currentTimestamp = Math.floor(Date.now() / 1000);
-            const currentTime =
+            const currentTimestamp = Date.now();
+            const expectedTime =
                 moment(currentTimestamp).format('DD-MM HH:mm:ss');
-            expect(Helper.LocalTime(currentTimestamp)).toBe(currentTime);
+            expect(Helper.LocalTime(currentTimestamp)).toBe(expectedTime);
         });
     });
 

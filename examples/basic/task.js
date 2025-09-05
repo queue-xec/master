@@ -1,13 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable import/no-unresolved */
-/*
- only needed to sinulate work / delay
-const timer = (ms) => new Promise((res) => setTimeout(res, ms));
-function randomIntFromInterval(min, max) { // min and max included
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
- */
 const moment = require('moment');
+const { timer, randomIntFromInterval } = require('../../src/utils');
 
 class Task {
     constructor() {
